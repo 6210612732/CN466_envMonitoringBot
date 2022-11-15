@@ -1,0 +1,19 @@
+{
+  "name": "env_monitoring_bot",
+  "version": "1.0.0",
+  "description": "Node.js on Docker",
+  "author": "CN466 group3",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "latest",
+    "body-parser": "latest",
+    "mongodb": "latest",
+    "dotenv": "latest",
+    "@line/bot-sdk": "latest",
+    "mqtt": "latest"
+  }
+}
+
