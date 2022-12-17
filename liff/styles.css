@@ -1,0 +1,42 @@
+body{
+    font-family: 'Kanit', sans-serif;
+    font-size: 25px;
+    margin: 0;
+}
+
+body h1{
+    text-align: center;
+}
+
+.container{
+    width: 100%;
+    height: 30vw;   
+    display: flex;
+   justify-content: center;
+    align-items: center;
+}
+
+.box{
+    width: 55%;
+    height: 100%;
+    
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: wrap;
+    gap: 20px 20px;
+}
+
+.box div{
+    width: 30%;
+    height: 40%;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    list-style: none;
+    text-align: center;
+}
+
+.detail{
+   
+    font-size: 30px;
+}
