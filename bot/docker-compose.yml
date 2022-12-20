@@ -8,18 +8,18 @@ services:
     env_file:
       - .env
     depends_on:
-      - mosquitto
+      #- mosquitto
       - mongo_db
   mongo_db:
     image: mongo
     ports:
       - "27017:27017"
-  mosquitto:
-    image: eclipse-mosquitto
-    ports:
-      - "1883:1883"
-      - "9001:9001"
-    volumes:
-      - "./mosquitto.conf:/mosquitto/config/mosquitto.conf"
+#  mosquitto:
+#    image: eclipse-mosquitto
+#    ports:
+#      - "1883:1883"
+#      - "9001:9001"
+#    volumes:
+#      - "./mosquitto.conf:/mosquitto/config/mosquitto.conf"
 
 

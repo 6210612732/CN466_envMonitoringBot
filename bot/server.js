@@ -30,9 +30,16 @@ app.get('/api/sensor',async(req, res) => {
 })
 
 
-
+var client = mqtt.connect(options);
 //MQTT
-const mqttclient  = mqtt.connect('mqtt://bot-mosquitto-1'); ////// mqtt broker
+var options = {
+    host: 'efcc767b01804c3f8bec205ff536fea2.s2.eu.hivemq.cloud',
+    port: 8883,
+    protocol: 'mqtts',
+    username: 'krusty',
+    password: 'A123456b'
+}
+const mqttclient  = mqtt.connect(options); ////// mqtt broker
 mqttclient.on('connect', function () {
     mqttclient.subscribe('envmonitoring/sensor', function (err) {
         if (!err) {
