@@ -18,6 +18,7 @@ const line_cfg = {
 
 // App
 var data_idx = 0;
+var pressure_value =0;
 var temp_value = 0;
 var humid_value = 0;
 const app = express();
@@ -50,7 +51,7 @@ mqttclient.on('message', function (topic, message) {
     pressure_value = msg.pressure;
     temp_value = msg.temp;
     humid_value = msg.humid;
-    lineClient.pushMessage(process.env.USER_ID,{type:'text',text:msg.temp.toString()})
+    lineClient.pushMessage(process.env.LINE_ADMIN_ID,{type:'text',text:msg.temp.toString()})
 })
 
 
