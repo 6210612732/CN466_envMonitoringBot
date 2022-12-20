@@ -44,7 +44,7 @@ static void setupWifi() {
 
 static WiFiClient wfClient;
 static PubSubClient client(wfClient);
-const char * broker = "mqtt.eclipseprojects.io";
+const char * broker = "broker.mqttdashboard.com";
 
 static void setupMQTT() {
   Serial.println(" + MQTT Connecting.");
