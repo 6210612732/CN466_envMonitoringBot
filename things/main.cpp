@@ -108,7 +108,7 @@ void loop() {
 
   sprintf(json_body, json_tmpl, p, t, h);
   Serial.println(json_body);
-  client.publish("CuCumberIoT/msg", json_body);
+  client.publish("cn466_g01/sensors/device1", json_body);
   
   
   
