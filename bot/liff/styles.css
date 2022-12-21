@@ -17,14 +17,14 @@ body h1{
 }
 
 .box{
-    width: 55%;
+    width:80%;
     height: 100%;
-    
-    display: flex;
+    /*display: flex;*/
+    flex-wrap: wrap;
     justify-content: center;
     align-content: center;
-    flex-wrap: wrap;
     gap: 20px 20px;
+    flex-direction: column;
 }
 
 .box div{
