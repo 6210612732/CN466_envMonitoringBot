@@ -13,7 +13,8 @@
     "mongodb": "latest",
     "dotenv": "latest",
     "@line/bot-sdk": "latest",
-    "mqtt": "latest"
+    "mqtt": "latest",
+    "ngrok": "latest"
   }
 }
 

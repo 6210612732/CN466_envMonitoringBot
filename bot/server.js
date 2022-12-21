@@ -5,6 +5,7 @@ const mqtt = require('mqtt');
 require('dotenv').config();
 const { MongoClient } = require("mongodb");
 const line = require('@line/bot-sdk');
+const ngrok = require('ngrok');
 
 
 
@@ -30,19 +31,10 @@ app.get('/api/sensor',async(req, res) => {
     res.send(JSON.stringify(ans))
 })
 
-
-var client = mqtt.connect(options);
 //MQTT
-var options = {
-    host: 'efcc767b01804c3f8bec205ff536fea2.s2.eu.hivemq.cloud',
-    port: 8883,
-    protocol: 'mqtts',
-    username: 'krusty',
-    password: 'A123456b'
-}
-const mqttclient  = mqtt.connect(options); ////// mqtt broker
+const mqttclient  = mqtt.connect("mqtt://broker.hivemq.com"); ////// mqtt broker
 mqttclient.on('connect', function () {
-    mqttclient.subscribe('envmonitoring/sensor', function (err) {
+    mqttclient.subscribe('cn466_g01/sensors/device1', function (err) {
         if (!err) {
             const obj = {status:'ok'};
             mqttclient.publish('envmonitoring/status', JSON.stringify(obj))
@@ -53,12 +45,12 @@ mqttclient.on('message', function (topic, message) {
     // message is Buffer
     console.log(message.toString());
     const msg = JSON.parse(message.toString());
-    try_insert(msg.temp).catch(console.dir);
+    console.log("here---->",msg)
+    try_insert(msg).catch(console.dir);
     data_idx = data_idx + 1;
     pressure_value = msg.pressure;
-    temp_value = msg.temp;
-    humid_value = msg.humid;
-    lineClient.pushMessage(process.env.LINE_ADMIN_ID,{type:'text',text:msg.temp.toString()})
+    temp_value = msg.temperature;
+    humid_value = msg.humidity;
 })
 
 
@@ -95,18 +87,19 @@ async function try_X(value) {
     }
 }
 
-async function try_insert(value) {
+async function try_insert(msg) {
     try {
         await mongodbclient.connect();
         const database = mongodbclient.db('envmonitoring');
         const sensor = database.collection('sensor');
         const doc = {   
                         timestamp: new Date(),
-                        value : value
+                        temperature : msg.temperature,
+                        pressure : msg.pressure,
+                        humidity : msg.humidity
                     }
         console.log(doc);
         const result = await sensor.insertOne(doc);
-        console.log(result);
     }
     finally{
         await mongodbclient.close();
@@ -134,6 +127,20 @@ async function try_query(value) {
 
 }
 
+async function get_data() {
+    
+    try {
+        await mongodbclient.connect();
+        const database = mongodbclient.db('envmonitoring');
+        const sensor = database.collection('sensor')
+        var data = await sensor.find().sort({'_id':-1}).limit(1).toArray()
+
+    } finally {
+        await mongodbclient.close()
+    }  
+    return data
+}
+
 //line
 const lineClient = new line.Client(line_cfg);
 app.post('/callback', line.middleware(line_cfg), (req, res) => {
@@ -146,20 +153,43 @@ app.post('/callback', line.middleware(line_cfg), (req, res) => {
       });
 });
 
-function handleEvent(event) {
+async function handleEvent(event) {
     if (event.type !== 'message' || event.message.type !== 'text') {
       // ignore non-text-message event
       return Promise.resolve(null);
     }
-  
+    
     // create a echoing text message
     const echo = { type: 'text', text: event.message.text };
-  
-    // use reply API
-    return lineClient.replyMessage(event.replyToken, echo);
+    
+    if (event.message.text == "status") {
+        
+        const data = await get_data()
+            
+        console.log(`output = ${(JSON.stringify(data))}`)
+            
+        var temp = parseFloat(data[0].temperature).toFixed(2)
+        var humidity = parseFloat(data[0].humidity).toFixed(2)
+        var pressure = parseFloat(data[0].pressure).toFixed(2)
+
+        echo.text =  
+`Temperature : ${temp} 
+Pressure : ${pressure} 
+Humidity : ${humidity}`;
+           
+        return lineClient.replyMessage(event.replyToken, echo);
+    }else{
+        return lineClient.replyMessage(event.replyToken, echo);
+    }
+              
 }
 
-app.listen(PORT, () => {
 
+app.listen(PORT, () => {
+    console.log("It seems that BASE_URL is not set. Connecting to ngrok...")
+    ngrok.connect({addr:PORT, authtoken:process.env.NGROK_AUTH_TOKEN}).then(url => {
+    console.log('listening on ' + url + '/callback');
+    lineClient.setWebhookEndpointUrl(url + '/callback');
+    }).catch(console.error);
 });
 
