@@ -18,13 +18,16 @@
     <div class="container">
         <div class="box">
             <div>
-                <li>pressure: <div id="pres">null</div></li>
+                <li>pressure:</li>
+                <div id="pres">-</div>
             </div>
             <div>
-                <li>temperature: <div id="temp">null</div></li>
+                <li>temperature: </li>
+                <div id="temp">-</div>
             </div>
             <div>
-                <li>humidity: <div id="humid">null</div></li>
+                <li>humidity: </li>
+                <div id="humid">-</div>
             </div>
         </div>       
     </div>
@@ -67,11 +70,11 @@
           console.log("onMessageArrived:"+message.payloadString);
           const data = JSON.parse(message.payloadString);
           const topicVal = document.getElementById("pres");
-          topicVal.innerHTML = data.pressure;
+          topicVal.innerHTML = data.pressure.toFixed(2);
           const tempVal = document.getElementById("temp");
-          tempVal.innerHTML = data.temperature;
+          tempVal.innerHTML = data.temperature.toFixed(2);
           const ldrVal = document.getElementById("humid");
-          ldrVal.innerHTML = data.humidity;
+          ldrVal.innerHTML = data.humidity.toFixed(2);
         }
       </script>
 </body>
