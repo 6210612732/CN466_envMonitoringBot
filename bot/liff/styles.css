@@ -19,11 +19,11 @@ body h1{
 .box{
    
     height: 100%;
-    background-color: red;    
+   
     justify-content: center;
     align-content: center;
-    flex-wrap: wrap;
     gap: 20px 20px;
+    flex-direction: column;
 }
 
 .box div{
